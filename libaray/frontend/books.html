@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books</title>
+</head>
+<body>
+
+<h1>Available Books</h1>
+
+<div id="booksContainer"></div>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+async function loadBooks(){
+
+    const response = await fetch("http://127.0.0.1:8000/books");
+
+    const data = await response.json();
+
+    let output = "";
+
+    data.books.forEach(book => {
+
+        output += `
+        
+        <div style="
+            border:1px solid black;
+            padding:15px;
+            margin:15px;
+            border-radius:10px;
+        ">
+
+            <h2>${book.title}</h2>
+
+            <p><b>Author:</b> ${book.author}</p>
+
+            <p><b>Category:</b> ${book.category}</p>
+
+            <p><b>Available:</b> ${book.available_quantity}</p>
+
+            <button onclick="issueBook(${book.id})">
+                Issue Book
+            </button>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("booksContainer").innerHTML = output;
+}
+
+async function issueBook(bookId){
+
+    const formData = new FormData();
+
+    formData.append("user_id", user.id);
+    formData.append("book_id", bookId);
+
+    const response = await fetch("http://127.0.0.1:8000/issue-book", {
+
+        method: "POST",
+        body: formData
+
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    loadBooks();
+}
+
+loadBooks();
+
+</script>
+
+</body>
+</html>

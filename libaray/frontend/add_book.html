@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .container{
+            width: 400px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        .top-bar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="top-bar">
+
+            <h1>Add Book</h1>
+
+            <button onclick="goAdmin()">
+                Admin Panel
+            </button>
+
+        </div>
+
+        <form id="bookForm">
+
+            <input 
+                type="text"
+                id="title"
+                placeholder="Enter Book Title"
+                required
+            >
+
+            <input 
+                type="text"
+                id="author"
+                placeholder="Enter Author Name"
+                required
+            >
+
+            <input 
+                type="text"
+                id="category"
+                placeholder="Enter Category"
+                required
+            >
+
+            <input 
+                type="number"
+                id="quantity"
+                placeholder="Enter Quantity"
+                required
+            >
+
+            <button type="submit">
+                Add Book
+            </button>
+
+        </form>
+
+    </div>
+
+<script>
+
+document.getElementById("bookForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append(
+        "title",
+        document.getElementById("title").value
+    );
+
+    formData.append(
+        "author",
+        document.getElementById("author").value
+    );
+
+    formData.append(
+        "category",
+        document.getElementById("category").value
+    );
+
+    formData.append(
+        "quantity",
+        document.getElementById("quantity").value
+    );
+
+    const response = await fetch(
+        "http://127.0.0.1:8000/add-book",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    document.getElementById("bookForm").reset();
+
+});
+
+function goAdmin(){
+
+    window.location.href = "admin.html";
+
+}
+
+</script>
+
+</body>
+</html>

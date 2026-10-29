@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .top-bar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .books-container{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="top-bar">
+
+        <h1>My Issued Books</h1>
+
+        <button onclick="goDashboard()">
+            Dashboard
+        </button>
+
+    </div>
+
+    <div class="books-container" id="booksContainer">
+
+    </div>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+async function loadMyBooks(){
+
+    const response = await fetch(
+        `http://127.0.0.1:8000/my-books/${user.id}`
+    );
+
+    const data = await response.json();
+
+    let output = "";
+
+    if(data.books.length === 0){
+
+        output = `
+            <h2>No Books Issued Yet</h2>
+        `;
+    }
+
+    data.books.forEach(book => {
+
+        output += `
+        
+        <div class="book-card">
+
+            <h2>${book.title}</h2>
+
+            <p><b>Author:</b> ${book.author}</p>
+
+            <p><b>Category:</b> ${book.category}</p>
+
+            <p><b>Issued Date:</b> ${book.issue_date}</p>
+
+            <button onclick="returnBook(${book.id})">
+                Return Book
+            </button>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("booksContainer").innerHTML = output;
+}
+
+async function returnBook(issueId){
+
+    const formData = new FormData();
+
+    formData.append("issue_id", issueId);
+
+    const response = await fetch(
+        "http://127.0.0.1:8000/return-book",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    loadMyBooks();
+}
+
+function goDashboard(){
+
+    window.location.href = "dashboard.html";
+
+}
+
+loadMyBooks();
+
+</script>
+
+</body>
+</html>

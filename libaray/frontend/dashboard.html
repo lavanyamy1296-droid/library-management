@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Library Dashboard</h1>
+
+<h2 id="welcome"></h2>
+
+<hr>
+
+<button onclick="goBooks()">View Books</button>
+
+<button onclick="goMyBooks()">My Books</button>
+
+<button onclick="goLeaderboard()">Leaderboard</button>
+
+<button onclick="goAdmin()">Admin Panel</button>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+if(user){
+
+    document.getElementById("welcome").innerText =
+    "Welcome " + user.name;
+
+}
+
+function goBooks(){
+
+    window.location.href = "books.html";
+
+}
+
+function goMyBooks(){
+
+    window.location.href = "mybooks.html";
+
+}
+
+function goLeaderboard(){
+
+    window.location.href = "leaderboard.html";
+
+}
+
+function goAdmin(){
+
+    window.location.href = "admin.html";
+
+}
+
+function logout(){
+
+    localStorage.removeItem("user");
+
+    window.location.href = "login.html";
+
+}
+
+</script>
+
+</body>
+</html>
